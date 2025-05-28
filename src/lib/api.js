@@ -1,0 +1,236 @@
+// Configuración de la API de Laravel
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api"
+
+// Datos de ejemplo para desarrollo
+const mangasEjemplo = [
+  {
+    id: "1",
+    titulo: "One Piece",
+    autor: "Eiichiro Oda",
+    dibujante: "Eiichiro Oda",
+    tomos: "en_emision",
+    tomosLeidos: 95,
+    tomosComprados: 100,
+    estado: "Leyendo",
+    sinopsis: "Las aventuras de Monkey D. Luffy y su tripulación pirata en busca del tesoro One Piece.",
+    imagen: "https://via.placeholder.com/200x300/3B82F6/FFFFFF?text=One+Piece",
+  },
+  {
+    id: "2",
+    titulo: "Attack on Titan",
+    autor: "Hajime Isayama",
+    dibujante: "Hajime Isayama",
+    tomos: 34,
+    tomosLeidos: 34,
+    tomosComprados: 34,
+    estado: "Completado",
+    sinopsis: "La humanidad lucha por sobrevivir contra gigantes devoradores de humanos.",
+    imagen: "https://via.placeholder.com/200x300/10B981/FFFFFF?text=Attack+on+Titan",
+  },
+  {
+    id: "3",
+    titulo: "Demon Slayer",
+    autor: "Koyoharu Gotouge",
+    dibujante: "Koyoharu Gotouge",
+    tomos: 23,
+    tomosLeidos: 15,
+    tomosComprados: 20,
+    estado: "Leyendo",
+    sinopsis: "Tanjiro Kamado se convierte en cazador de demonios para salvar a su hermana.",
+    imagen: "https://via.placeholder.com/200x300/F59E0B/FFFFFF?text=Demon+Slayer",
+  },
+  {
+    id: "4",
+    titulo: "Naruto",
+    autor: "Masashi Kishimoto",
+    dibujante: "Masashi Kishimoto",
+    tomos: 72,
+    tomosLeidos: 72,
+    tomosComprados: 72,
+    estado: "Completado",
+    sinopsis: "La historia de un joven ninja que busca reconocimiento y sueña con convertirse en Hokage.",
+    imagen: "https://via.placeholder.com/200x300/F97316/FFFFFF?text=Naruto",
+  },
+  {
+    id: "5",
+    titulo: "Dragon Ball",
+    autor: "Akira Toriyama",
+    dibujante: "Akira Toriyama",
+    tomos: 42,
+    tomosLeidos: 30,
+    tomosComprados: 35,
+    estado: "Leyendo",
+    sinopsis: "Las aventuras de Goku en busca de las esferas del dragón.",
+    imagen: "https://via.placeholder.com/200x300/EAB308/FFFFFF?text=Dragon+Ball",
+  },
+]
+
+const autoresEjemplo = [
+  {
+    id: "1",
+    nombre: "Eiichiro Oda",
+    biografia: "Creador de One Piece, uno de los mangas más exitosos de todos los tiempos.",
+  },
+  { id: "2", nombre: "Hajime Isayama", biografia: "Creador de Attack on Titan, conocido por sus tramas complejas." },
+  { id: "3", nombre: "Koyoharu Gotouge", biografia: "Creador de Demon Slayer, famoso por su arte único." },
+  {
+    id: "4",
+    nombre: "Masashi Kishimoto",
+    biografia: "Creador de Naruto, una de las series más influyentes del manga.",
+  },
+  { id: "5", nombre: "Akira Toriyama", biografia: "Leyenda del manga, creador de Dragon Ball y Dr. Slump." },
+  { id: "6", nombre: "Tite Kubo", biografia: "Creador de Bleach, conocido por sus diseños de personajes únicos." },
+  { id: "7", nombre: "Kentaro Miura", biografia: "Creador de Berserk, maestro del arte detallado y oscuro." },
+  {
+    id: "8",
+    nombre: "Naoki Urasawa",
+    biografia: "Creador de Monster y 20th Century Boys, maestro del thriller psicológico.",
+  },
+]
+
+const dibujantesEjemplo = [
+  { id: "1", nombre: "Eiichiro Oda", biografia: "Dibujante de One Piece, conocido por su estilo expresivo." },
+  { id: "2", nombre: "Hajime Isayama", biografia: "Dibujante de Attack on Titan, evolucionó mucho su arte." },
+  { id: "3", nombre: "Koyoharu Gotouge", biografia: "Dibujante de Demon Slayer, estilo tradicional japonés." },
+  {
+    id: "4",
+    nombre: "Yusuke Murata",
+    biografia: "Dibujante de One Punch Man, considerado uno de los mejores artistas actuales.",
+  },
+  { id: "5", nombre: "Takeshi Obata", biografia: "Dibujante de Death Note y Bakuman, arte muy detallado." },
+  { id: "6", nombre: "Akira Toriyama", biografia: "Dibujante de Dragon Ball, estilo icónico e influyente." },
+  { id: "7", nombre: "Kentaro Miura", biografia: "Dibujante de Berserk, arte increíblemente detallado." },
+  { id: "8", nombre: "Naoki Urasawa", biografia: "Dibujante de Monster, realismo excepcional." },
+]
+
+let mangasData = [...mangasEjemplo]
+let autoresData = [...autoresEjemplo]
+let dibujantesData = [...dibujantesEjemplo]
+
+// Función helper para hacer requests
+const apiRequest = async (endpoint, options = {}) => {
+  const url = `${API_BASE_URL}${endpoint}`
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...options.headers,
+    },
+    ...options,
+  }
+
+  try {
+    const response = await fetch(url, config)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return await response.json()
+  } catch (error) {
+    console.error("API Request failed:", error)
+    throw error
+  }
+}
+
+// API Mangas
+export const fetchMangas = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 800))
+  return mangasData
+}
+
+export const createManga = async (manga) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  const newManga = {
+    ...manga,
+    id: Date.now().toString(),
+    imagen: manga.imagen || "https://via.placeholder.com/200x300/6B7280/FFFFFF?text=No+Image",
+  }
+  mangasData.push(newManga)
+  return newManga
+}
+
+export const updateManga = async (updates) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  const index = mangasData.findIndex((manga) => manga.id === updates.id)
+  if (index === -1) throw new Error("Manga not found")
+
+  const { id, ...updateData } = updates
+  mangasData[index] = { ...mangasData[index], ...updateData }
+  return mangasData[index]
+}
+
+export const deleteManga = async (id) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  mangasData = mangasData.filter((manga) => manga.id !== id)
+}
+
+// API Autores
+export const fetchAutores = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  return autoresData
+}
+
+export const searchAutores = async (query) => {
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  return autoresData.filter((autor) => autor.nombre.toLowerCase().includes(query.toLowerCase()))
+}
+
+export const createAutor = async (autor) => {
+  await new Promise((resolve) => setTimeout(resolve, 800))
+  const newAutor = {
+    ...autor,
+    id: Date.now().toString(),
+  }
+  autoresData.push(newAutor)
+  return newAutor
+}
+
+export const updateAutor = async (updates) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  const index = autoresData.findIndex((autor) => autor.id === updates.id)
+  if (index === -1) throw new Error("Autor not found")
+
+  const { id, ...updateData } = updates
+  autoresData[index] = { ...autoresData[index], ...updateData }
+  return autoresData[index]
+}
+
+export const deleteAutor = async (id) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  autoresData = autoresData.filter((autor) => autor.id !== id)
+}
+
+// API Dibujantes
+export const fetchDibujantes = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  return dibujantesData
+}
+
+export const searchDibujantes = async (query) => {
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  return dibujantesData.filter((dibujante) => dibujante.nombre.toLowerCase().includes(query.toLowerCase()))
+}
+
+export const createDibujante = async (dibujante) => {
+  await new Promise((resolve) => setTimeout(resolve, 800))
+  const newDibujante = {
+    ...dibujante,
+    id: Date.now().toString(),
+  }
+  dibujantesData.push(newDibujante)
+  return newDibujante
+}
+
+export const updateDibujante = async (updates) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  const index = dibujantesData.findIndex((dibujante) => dibujante.id === updates.id)
+  if (index === -1) throw new Error("Dibujante not found")
+
+  const { id, ...updateData } = updates
+  dibujantesData[index] = { ...dibujantesData[index], ...updateData }
+  return dibujantesData[index]
+}
+
+export const deleteDibujante = async (id) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  dibujantesData = dibujantesData.filter((dibujante) => dibujante.id !== id)
+}
