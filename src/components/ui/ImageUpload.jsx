@@ -47,7 +47,7 @@ export function ImageUpload ({ value, onChange, onRemove }) {
         ? (
           <div className='relative group'>
             <img
-              src={value || 'https://via.placeholder.com/200x300'}
+              src={value}
               alt='Portada del manga'
               className='w-full h-48 object-cover rounded-lg border-2 border-gray-200 transition-transform group-hover:scale-[1.02]'
             />

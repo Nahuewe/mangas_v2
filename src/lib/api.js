@@ -14,9 +14,11 @@ const mangasEjemplo = [
     tomos: 'en_emision',
     tomosLeidos: 95,
     tomosComprados: 100,
+    editorial: 'Ivrea',
+    tamañoTomo: 'C6',
     estado: 'Leyendo',
     sinopsis: 'Las aventuras de Monkey D. Luffy y su tripulación pirata en busca del tesoro One Piece.',
-    imagen: 'https://via.placeholder.com/200x300/3B82F6/FFFFFF?text=One+Piece'
+    imagen: ''
   },
   {
     id: '2',
@@ -26,9 +28,11 @@ const mangasEjemplo = [
     tomos: 34,
     tomosLeidos: 34,
     tomosComprados: 34,
+    editorial: 'Ovni',
+    tamañoTomo: 'A5',
     estado: 'Completado',
     sinopsis: 'La humanidad lucha por sobrevivir contra gigantes devoradores de humanos.',
-    imagen: 'https://via.placeholder.com/200x300/10B981/FFFFFF?text=Attack+on+Titan'
+    imagen: ''
   },
   {
     id: '3',
@@ -38,9 +42,11 @@ const mangasEjemplo = [
     tomos: 23,
     tomosLeidos: 15,
     tomosComprados: 20,
+    editorial: 'Ivrea',
+    tamañoTomo: 'C6',
     estado: 'Leyendo',
     sinopsis: 'Tanjiro Kamado se convierte en cazador de demonios para salvar a su hermana.',
-    imagen: 'https://via.placeholder.com/200x300/F59E0B/FFFFFF?text=Demon+Slayer'
+    imagen: ''
   },
   {
     id: '4',
@@ -50,9 +56,11 @@ const mangasEjemplo = [
     tomos: 72,
     tomosLeidos: 72,
     tomosComprados: 72,
+    editorial: 'Panini',
+    tamañoTomo: 'B6',
     estado: 'Completado',
     sinopsis: 'La historia de un joven ninja que busca reconocimiento y sueña con convertirse en Hokage.',
-    imagen: 'https://via.placeholder.com/200x300/F97316/FFFFFF?text=Naruto'
+    imagen: ''
   },
   {
     id: '5',
@@ -62,9 +70,11 @@ const mangasEjemplo = [
     tomos: 42,
     tomosLeidos: 30,
     tomosComprados: 35,
+    editorial: 'Ivrea',
+    tamañoTomo: 'C6',
     estado: 'Leyendo',
     sinopsis: 'Las aventuras de Goku en busca de las esferas del dragón.',
-    imagen: 'https://via.placeholder.com/200x300/EAB308/FFFFFF?text=Dragon+Ball'
+    imagen: ''
   }
 ]
 
@@ -121,7 +131,7 @@ export const createManga = async (manga) => {
   const newManga = {
     ...manga,
     id: Date.now().toString(),
-    imagen: manga.imagen || 'https://via.placeholder.com/200x300/6B7280/FFFFFF?text=No+Image'
+    imagen: manga.imagen
   }
   mangasData.push(newManga)
   return newManga

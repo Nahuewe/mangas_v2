@@ -47,7 +47,7 @@ export function MangaCard ({ manga, onEdit, onDelete }) {
     <div className='bg-white border border-gray-200 rounded-lg shadow-soft overflow-hidden hover:shadow-lg transition-all duration-300 group animate-fadeIn'>
       <div className='relative'>
         <img
-          src={manga.imagen || 'https://via.placeholder.com/200x300'}
+          src={manga.imagen}
           alt={manga.titulo}
           className='w-full h-48 object-cover transition-transform group-hover:scale-105'
         />
@@ -95,15 +95,16 @@ export function MangaCard ({ manga, onEdit, onDelete }) {
           <p className='text-sm text-gray-600'>
             <span className='font-medium'>Arte:</span> {manga.dibujante}
           </p>
+          <p className='text-sm text-gray-600'>
+            <span className='font-medium'>Editorial:</span> {manga.editorial}
+          </p>
+          <p className='text-sm text-gray-600'>
+            <span className='font-medium'>Tamaño:</span> {manga.tamañoTomo}
+          </p>
         </div>
 
         <div className='space-y-3'>
           <div className='space-y-1'>
-            <div className='flex justify-between text-sm text-gray-700'>
-              <span className='font-medium'>Leídos:</span>
-              <span className='font-semibold'>{progressInfo.textLeidos}</span>
-            </div>
-
             {progressInfo.showBar && (
               <div className='w-full bg-gray-200 rounded-full h-2'>
                 <div
@@ -112,6 +113,11 @@ export function MangaCard ({ manga, onEdit, onDelete }) {
                 />
               </div>
             )}
+
+            <div className='flex justify-between text-sm text-gray-700'>
+              <span className='font-medium'>Leídos:</span>
+              <span className='font-semibold'>{progressInfo.textLeidos}</span>
+            </div>
           </div>
 
           <div className='space-y-1'>

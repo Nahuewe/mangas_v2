@@ -40,7 +40,7 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
         tomosLeidos: manga.tomosLeidos,
         tomosComprados: manga.tomosComprados || 0,
         estado: manga.estado,
-        sinopsis: manga.sinopsis,
+        sinopsis: manga.sinopsis || '',
         imagen: manga.imagen || '',
         editorial: manga.editorial || '',
         tamañoTomo: manga.tamañoTomo || ''
