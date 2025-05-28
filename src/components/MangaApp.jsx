@@ -19,7 +19,7 @@ export default function MangaApp () {
 
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
+  const itemsPerPage = 4
 
   const tabs = [
     { id: 'biblioteca', label: 'Biblioteca', icon: BookOpen },

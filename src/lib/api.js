@@ -71,7 +71,7 @@ const mangasEjemplo = [
     editorial: 'Ivrea',
     tamañoTomo: 'Tanko',
     estado: 'Leyendo',
-    sinopsis: 'El pibe motocierra.',
+    sinopsis: 'El pibe chainsaw.',
     imagen: 'https://media.tenor.com/sCgKG1LgECAAAAAM/shock-chainsaw-man.gif'
   }
 ]
