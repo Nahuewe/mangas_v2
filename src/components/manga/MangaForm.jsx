@@ -4,6 +4,16 @@ import { ImageUpload } from '../ui/ImageUpload'
 import { LoadingSpinner } from '../ui/LoadingSpinner'
 import { SearchInput } from '../ui/SearchInput'
 
+const editoriales = [
+  'Ivrea', 'Panini', 'Kemuri', 'Distrito Manga', 'Ovni Press',
+  'Planeta Cómic', 'Utopia', 'Merci', 'Milky Way', 'Moztroz',
+  'Random Comics', 'Hotel de las Ideas', 'Kibook Ediciones'
+]
+
+const tamaños = ['Tanko', 'B6', 'A5', 'B6x2', 'C6x2', 'A5 color']
+
+const estados = ['Leído', 'Completado', 'Leyendo', 'En pausa', 'Abandonado']
+
 export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title }) {
   const [formData, setFormData] = useState({
     titulo: '',
@@ -12,7 +22,7 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
     tomos: 0,
     tomosLeidos: 0,
     tomosComprados: 0,
-    estado: 'Plan de lectura',
+    estado: 'Leido',
     sinopsis: '',
     imagen: '',
     editorial: '',
@@ -24,7 +34,6 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
   const [dibujanteQuery, setDibujanteQuery] = useState('')
   const [autorEsDibujante, setAutorEsDibujante] = useState(false)
 
-  // Queries y mutations
   const { data: autoresSuggestions = [], isLoading: isLoadingAutores } = useSearchAutores(autorQuery)
   const { data: dibujantesSuggestions = [], isLoading: isLoadingDibujantes } = useSearchDibujantes(dibujanteQuery)
   const createAutorMutation = useCreateAutor()
@@ -45,111 +54,75 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
         editorial: manga.editorial || '',
         tamañoTomo: manga.tamañoTomo || ''
       })
-      setTomosType(manga.tomos === 'en_emision' ? 'en_emision' : 'numero')
+      setTomosType(
+        manga.tomos === 'en_emision'
+          ? 'en_emision'
+          : manga.tomos === 'unico'
+            ? 'unico'
+            : 'numero'
+      )
       setAutorQuery(manga.autor)
       setDibujanteQuery(manga.dibujante)
       setAutorEsDibujante(manga.autor === manga.dibujante)
     }
   }, [manga])
 
-  // Sincronizar dibujante con autor cuando está marcado
   useEffect(() => {
     if (autorEsDibujante && formData.autor) {
-      setFormData((prev) => ({ ...prev, dibujante: prev.autor }))
+      setFormData(prev => ({ ...prev, dibujante: prev.autor }))
       setDibujanteQuery(formData.autor)
     }
   }, [autorEsDibujante, formData.autor])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const submitData = {
-      ...formData,
-      tomos: tomosType === 'en_emision' ? 'en_emision' : formData.tomos
-    }
-
-    await onSubmit(submitData)
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
+  const handleChange = e => {
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
       ...prev,
       [name]:
-        name === 'tomos' || name === 'tomosLeidos' || name === 'tomosComprados' ? Number.parseInt(value) || 0 : value
+        type === 'checkbox'
+          ? checked
+          : ['tomos', 'tomosLeidos', 'tomosComprados'].includes(name)
+              ? parseInt(value) || 0
+              : value
     }))
   }
 
-  const handleTomosTypeChange = (type) => {
+  const handleTomosTypeChange = type => {
     setTomosType(type)
-    if (type === 'en_emision') {
-      setFormData((prev) => ({ ...prev, tomos: 0 }))
+    if (type === 'en_emision' || type === 'unico') {
+      setFormData(prev => ({
+        ...prev,
+        tomos: 0,
+        tomosLeidos: 0,
+        tomosComprados: 0
+      }))
     }
   }
 
-  const handleAutorChange = (value) => {
-    setAutorQuery(value)
-    setFormData((prev) => ({ ...prev, autor: value }))
-  }
-
-  const handleAutorSelect = (autor) => {
-    setFormData((prev) => ({ ...prev, autor }))
-    setAutorQuery(autor)
-  }
-
-  const handleDibujanteChange = (value) => {
-    if (!autorEsDibujante) {
-      setDibujanteQuery(value)
-      setFormData((prev) => ({ ...prev, dibujante: value }))
+  const handleSubmit = async e => {
+    e.preventDefault()
+    const submitData = {
+      ...formData,
+      tomos:
+        tomosType === 'en_emision'
+          ? 'en_emision'
+          : tomosType === 'unico'
+            ? 'unico'
+            : formData.tomos
     }
-  }
-
-  const handleDibujanteSelect = (dibujante) => {
-    if (!autorEsDibujante) {
-      setFormData((prev) => ({ ...prev, dibujante }))
-      setDibujanteQuery(dibujante)
-    }
-  }
-
-  const handleAddNewAutor = async (nombre) => {
-    try {
-      await createAutorMutation.mutateAsync({ nombre, biografia: '' })
-      setFormData((prev) => ({ ...prev, autor: nombre }))
-      setAutorQuery(nombre)
-    } catch (error) {
-      console.error('Error creating autor:', error)
-    }
-  }
-
-  const handleAddNewDibujante = async (nombre) => {
-    try {
-      await createDibujanteMutation.mutateAsync({ nombre, biografia: '' })
-      setFormData((prev) => ({ ...prev, dibujante: nombre }))
-      setDibujanteQuery(nombre)
-    } catch (error) {
-      console.error('Error creating dibujante:', error)
-    }
-  }
-
-  const handleAutorEsDibujanteChange = (e) => {
-    const checked = e.target.checked
-    setAutorEsDibujante(checked)
-
-    if (checked && formData.autor) {
-      setFormData((prev) => ({ ...prev, dibujante: prev.autor }))
-      setDibujanteQuery(formData.autor)
-    }
+    await onSubmit(submitData)
+    console.log(submitData)
   }
 
   return (
     <div className='bg-white rounded-lg shadow-soft p-6 border border-gray-200 animate-fadeIn'>
       <h3 className='text-lg font-semibold text-gray-900 mb-6'>{title}</h3>
-
       <form onSubmit={handleSubmit} className='space-y-6'>
+
         <ImageUpload
           value={formData.imagen}
-          onChange={(imageUrl) => setFormData((prev) => ({ ...prev, imagen: imageUrl }))}
-          onRemove={() => setFormData((prev) => ({ ...prev, imagen: '' }))}
+          onChange={url => setFormData(prev => ({ ...prev, imagen: url }))}
+          onRemove={() => setFormData(prev => ({ ...prev, imagen: '' }))}
         />
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -158,14 +131,12 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
               Título *
             </label>
             <input
-              type='text'
               id='titulo'
               name='titulo'
               value={formData.titulo}
               onChange={handleChange}
               required
-              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
-              placeholder='Nombre del manga'
+              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
             />
           </div>
 
@@ -178,13 +149,10 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
               name='estado'
               value={formData.estado}
               onChange={handleChange}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
+              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
             >
-              <option value='Plan de lectura'>Plan de lectura</option>
-              <option value='Leyendo'>Leyendo</option>
-              <option value='Completado'>Completado</option>
-              <option value='En pausa'>En pausa</option>
-              <option value='Abandonado'>Abandonado</option>
+              <option value=''>Seleccionar estado</option>
+              {estados.map(ed => <option key={ed} value={ed}>{ed}</option>)}
             </select>
           </div>
         </div>
@@ -193,13 +161,11 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
           <SearchInput
             label='Autor'
             value={formData.autor}
-            onChange={handleAutorChange}
-            onSelect={handleAutorSelect}
-            onAddNew={handleAddNewAutor}
+            onChange={val => setFormData(prev => ({ ...prev, autor: val }))}
+            onSelect={val => setFormData(prev => ({ ...prev, autor: val }))}
+            onAddNew={async val => { await createAutorMutation.mutateAsync({ nombre: val }); setFormData(prev => ({ ...prev, autor: val })) }}
             suggestions={autoresSuggestions}
             isLoading={isLoadingAutores}
-            placeholder='Buscar autor...'
-            addNewText='Agregar nuevo autor'
             required
           />
 
@@ -208,8 +174,8 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
               type='checkbox'
               id='autorEsDibujante'
               checked={autorEsDibujante}
-              onChange={handleAutorEsDibujanteChange}
-              className='h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-colors'
+              onChange={e => setAutorEsDibujante(e.target.checked)}
+              className='h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
             />
             <label htmlFor='autorEsDibujante' className='text-sm font-medium text-gray-700'>
               El autor es también el dibujante
@@ -220,73 +186,77 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
             <SearchInput
               label='Dibujante'
               value={formData.dibujante}
-              onChange={handleDibujanteChange}
-              onSelect={handleDibujanteSelect}
-              onAddNew={!autorEsDibujante ? handleAddNewDibujante : undefined}
+              onChange={val => setFormData(prev => ({ ...prev, dibujante: val }))}
+              onSelect={val => setFormData(prev => ({ ...prev, dibujante: val }))}
+              onAddNew={async val => { await createDibujanteMutation.mutateAsync({ nombre: val }); setFormData(prev => ({ ...prev, dibujante: val })) }}
               suggestions={dibujantesSuggestions}
               isLoading={isLoadingDibujantes}
-              placeholder={autorEsDibujante ? 'Se usará el mismo autor' : 'Buscar dibujante...'}
-              addNewText='Agregar nuevo dibujante'
               required
             />
           </div>
+
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <div>
-            <label className='block text-sm font-medium text-gray-700 mb-2'>Tomos Totales</label>
-            <div className='space-y-2'>
-              <div className='flex gap-4'>
-                <label className='flex items-center'>
-                  <input
-                    type='radio'
-                    checked={tomosType === 'numero'}
-                    onChange={() => handleTomosTypeChange('numero')}
-                    className='mr-2 text-blue-600 focus:ring-blue-500'
-                  />
-                  <span className='text-sm'>Número específico</span>
-                </label>
-                <label className='flex items-center'>
-                  <input
-                    type='radio'
-                    checked={tomosType === 'en_emision'}
-                    onChange={() => handleTomosTypeChange('en_emision')}
-                    className='mr-2 text-blue-600 focus:ring-blue-500'
-                  />
-                  <span className='text-sm'>En emisión</span>
-                </label>
-              </div>
-              {tomosType === 'numero' && (
-                <input
-                  type='number'
-                  name='tomos'
-                  value={formData.tomos}
-                  onChange={handleChange}
-                  min='0'
-                  className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
-                />
-              )}
-              {tomosType === 'en_emision' && (
-                <div className='px-3 py-2 bg-orange-50 border border-orange-200 rounded-md text-sm text-orange-700'>
-                  Manga en emisión
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Tomos */}
+        <div>
+          <label className='block text-sm font-medium text-gray-700 mb-2'>Tomos Totales</label>
+          <div className='space-y-2'>
 
+            <div className='flex gap-4'>
+              {['numero', 'en_emision', 'unico'].map(type => (
+                <label key={type} className='flex items-center'>
+                  <input
+                    type='radio'
+                    checked={tomosType === type}
+                    onChange={() => handleTomosTypeChange(type)}
+                    className='mr-2 text-blue-600 focus:ring-blue-500'
+                  />
+                  <span className='text-sm'>
+                    {type === 'numero' ? 'Número específico' : type === 'en_emision' ? 'En emisión' : 'Tomo único'}
+                  </span>
+                </label>
+              ))}
+            </div>
+
+            {tomosType === 'numero' && (
+              <input
+                type='number'
+                name='tomos'
+                value={formData.tomos}
+                onChange={handleChange}
+                min='0'
+                className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
+              />
+            )}
+
+            {tomosType === 'en_emision' && (
+              <div className='px-3 py-2 bg-orange-50 border border-orange-200 rounded-md text-sm text-orange-700'>
+                Manga en emisión
+              </div>
+            )}
+
+            {tomosType === 'unico' && (
+              <div className='px-3 py-2 bg-green-50 border border-green-200 rounded-md text-sm text-green-700'>
+                Tomo único
+              </div>
+            )}
+
+          </div>
+        </div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <div>
             <label htmlFor='tomosComprados' className='block text-sm font-medium text-gray-700 mb-2'>
               Tomos Comprados
             </label>
             <input
-              type='number'
               id='tomosComprados'
               name='tomosComprados'
+              type='number'
               value={formData.tomosComprados}
               onChange={handleChange}
               min='0'
-              max={tomosType === 'numero' ? formData.tomos : undefined}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
+              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
             />
           </div>
 
@@ -295,33 +265,35 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
               Tomos Leídos
             </label>
             <input
-              type='number'
               id='tomosLeidos'
               name='tomosLeidos'
+              type='number'
               value={formData.tomosLeidos}
               onChange={handleChange}
               min='0'
               max={formData.tomosComprados}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
+              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
             />
-            <p className='text-xs text-gray-500 mt-1'>Máximo: {formData.tomosComprados} (comprados)</p>
+            <p className='text-xs text-gray-500 mt-1'>Máx: {formData.tomosComprados}</p>
           </div>
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+
           <div>
             <label htmlFor='editorial' className='block text-sm font-medium text-gray-700 mb-2'>
               Editorial
             </label>
-            <input
-              type='text'
+            <select
               id='editorial'
               name='editorial'
               value={formData.editorial}
               onChange={handleChange}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-              placeholder='Ivrea, Panini, Kemuri...'
-            />
+              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
+            >
+              <option value=''>Seleccionar editorial</option>
+              {editoriales.map(ed => <option key={ed} value={ed}>{ed}</option>)}
+            </select>
           </div>
 
           <div>
@@ -333,12 +305,10 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
               name='tamañoTomo'
               value={formData.tamañoTomo}
               onChange={handleChange}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+              className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
             >
               <option value=''>Seleccionar tamaño</option>
-              <option value='C6'>C6</option>
-              <option value='B6'>B6</option>
-              <option value='A5'>A5</option>
+              {tamaños.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
         </div>
@@ -353,8 +323,7 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
             value={formData.sinopsis}
             onChange={handleChange}
             rows={4}
-            className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
-            placeholder='Descripción del manga...'
+            className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 transition'
           />
         </div>
 
@@ -362,17 +331,16 @@ export function MangaForm ({ manga, onSubmit, onCancel, isLoading = false, title
           <button
             type='submit'
             disabled={isLoading}
-            className='flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors'
+            className='flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 transition'
           >
             {isLoading && <LoadingSpinner size='sm' />}
             {isLoading ? (manga ? 'Actualizando...' : 'Agregando...') : manga ? 'Actualizar Manga' : 'Agregar Manga'}
           </button>
-
           {onCancel && (
             <button
               type='button'
               onClick={onCancel}
-              className='px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
+              className='px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 transition'
             >
               Cancelar
             </button>

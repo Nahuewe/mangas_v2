@@ -75,8 +75,8 @@ src/
 ### Gestión de Mangas
 - ✅ Crear, editar y eliminar mangas
 - ✅ Upload de imágenes de portada
-- ✅ Estados: Plan de lectura, Leyendo, Completado, En pausa, Abandonado
-- ✅ Tomos totales (número específico o "en emisión")
+- ✅ Estados: Leído, Completado, Leyendo, En pausa, Abandonado
+- ✅ Tomos totales (número específico, "en emisión" o "tomo único")
 - ✅ Tracking de tomos comprados y leídos
 - ✅ Sinopsis y metadatos
 

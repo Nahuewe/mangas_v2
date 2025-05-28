@@ -8,73 +8,71 @@
 const mangasEjemplo = [
   {
     id: '1',
-    titulo: 'One Piece',
-    autor: 'Eiichiro Oda',
-    dibujante: 'Eiichiro Oda',
-    tomos: 'en_emision',
-    tomosLeidos: 95,
-    tomosComprados: 100,
-    editorial: 'Ivrea',
-    tamañoTomo: 'C6',
+    titulo: 'Kaguya-Sama: Love is War',
+    autor: 'Aka Akasaka',
+    dibujante: 'Aka Akasaka',
+    tomos: 28,
+    tomosLeidos: 24,
+    tomosComprados: 28,
+    editorial: 'Panini',
+    tamañoTomo: 'B6',
     estado: 'Leyendo',
-    sinopsis: 'Las aventuras de Monkey D. Luffy y su tripulación pirata en busca del tesoro One Piece.',
-    imagen: ''
+    sinopsis: 'Historia de amor entre Kaguya Shinimiya y Miyuki Shirogane.',
+    imagen: 'https://i.pinimg.com/originals/d5/cb/e3/d5cbe38b1dd23303ec93614c381ca122.gif'
   },
   {
     id: '2',
-    titulo: 'Attack on Titan',
+    titulo: 'The Promised Neverland',
     autor: 'Hajime Isayama',
     dibujante: 'Hajime Isayama',
-    tomos: 34,
-    tomosLeidos: 34,
-    tomosComprados: 34,
-    editorial: 'Ovni',
-    tamañoTomo: 'A5',
-    estado: 'Completado',
-    sinopsis: 'La humanidad lucha por sobrevivir contra gigantes devoradores de humanos.',
-    imagen: ''
-  },
-  {
-    id: '3',
-    titulo: 'Demon Slayer',
-    autor: 'Koyoharu Gotouge',
-    dibujante: 'Koyoharu Gotouge',
-    tomos: 23,
-    tomosLeidos: 15,
+    tomos: 20,
+    tomosLeidos: 20,
     tomosComprados: 20,
     editorial: 'Ivrea',
     tamañoTomo: 'C6',
-    estado: 'Leyendo',
-    sinopsis: 'Tanjiro Kamado se convierte en cazador de demonios para salvar a su hermana.',
-    imagen: ''
+    estado: 'Completado',
+    sinopsis: 'Los niños son criados en granjas donde para luego comerselos.',
+    imagen: 'https://i.pinimg.com/originals/43/72/e6/4372e641b207c90dd7ca11bc447de9af.gif'
+  },
+  {
+    id: '3',
+    titulo: 'Tokyo Revengers',
+    autor: 'Ken Wakui',
+    dibujante: 'Ken Wakui',
+    tomos: 31,
+    tomosLeidos: 12,
+    tomosComprados: 12,
+    editorial: 'Ivrea',
+    tamañoTomo: 'Tanko',
+    estado: 'Abandonado',
+    sinopsis: 'Pandilleros que viajan en el tiempo.',
+    imagen: 'https://giffiles.alphacoders.com/219/219048.gif'
   },
   {
     id: '4',
-    titulo: 'Naruto',
-    autor: 'Masashi Kishimoto',
-    dibujante: 'Masashi Kishimoto',
-    tomos: 72,
-    tomosLeidos: 72,
-    tomosComprados: 72,
-    editorial: 'Panini',
-    tamañoTomo: 'B6',
-    estado: 'Completado',
-    sinopsis: 'La historia de un joven ninja que busca reconocimiento y sueña con convertirse en Hokage.',
-    imagen: ''
+    titulo: 'K-ON!',
+    autor: 'Kakifly',
+    dibujante: 'Kakifly',
+    tomos: 'unico',
+    editorial: 'Kemuri',
+    tamañoTomo: 'B6x2',
+    estado: 'Leído',
+    sinopsis: 'Monitas chistosas que tocan musica en la escuela.',
+    imagen: 'https://media.tenor.com/EvaqLQGAP2YAAAAM/attention-listen.gif'
   },
   {
     id: '5',
-    titulo: 'Dragon Ball',
-    autor: 'Akira Toriyama',
-    dibujante: 'Akira Toriyama',
-    tomos: 42,
-    tomosLeidos: 30,
-    tomosComprados: 35,
+    titulo: 'Chainsaw Man',
+    autor: 'Tatsuki Fujimoto',
+    dibujante: 'Tatsuki Fujimoto',
+    tomos: 'en_emision',
+    tomosLeidos: 19,
+    tomosComprados: 19,
     editorial: 'Ivrea',
-    tamañoTomo: 'C6',
+    tamañoTomo: 'Tanko',
     estado: 'Leyendo',
-    sinopsis: 'Las aventuras de Goku en busca de las esferas del dragón.',
-    imagen: ''
+    sinopsis: 'El pibe motocierra.',
+    imagen: 'https://media.tenor.com/sCgKG1LgECAAAAAM/shock-chainsaw-man.gif'
   }
 ]
 
@@ -96,8 +94,8 @@ const autoresEjemplo = [
   { id: '7', nombre: 'Kentaro Miura', biografia: 'Creador de Berserk, maestro del arte detallado y oscuro.' },
   {
     id: '8',
-    nombre: 'Naoki Urasawa',
-    biografia: 'Creador de Monster y 20th Century Boys, maestro del thriller psicológico.'
+    nombre: 'Aka Akasaka',
+    biografia: 'Creador de Kaguya-Sama y Oshi no Ko'
   }
 ]
 

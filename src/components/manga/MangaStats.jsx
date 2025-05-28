@@ -1,7 +1,7 @@
 export function MangaStats ({ mangas }) {
   const totalMangas = mangas.length
-  const totalTomosLeidos = mangas.reduce((total, manga) => total + manga.tomosLeidos, 0)
-  const totalTomosComprados = mangas.reduce((total, manga) => total + (manga.tomosComprados || 0), 0)
+  const totalTomosLeidos = mangas.reduce((total, manga) => total + (manga.tomosLeidos ?? 0), 0)
+  const totalTomosComprados = mangas.reduce((total, manga) => total + (manga.tomosComprados ?? 0), 0)
   const completados = mangas.filter((manga) => manga.estado === 'Completado').length
 
   const stats = [

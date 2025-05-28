@@ -19,7 +19,7 @@ export default function MangaApp () {
 
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 4
+  const itemsPerPage = 5
 
   const tabs = [
     { id: 'biblioteca', label: 'Biblioteca', icon: BookOpen },
@@ -101,7 +101,6 @@ export default function MangaApp () {
             <Book className='h-9 w-9 text-blue-600' />
             <h1 className='text-4xl font-extrabold text-gray-800 tracking-tight'>Mi Colección de Manga</h1>
           </div>
-          <p className='text-base text-gray-500'>Organiza, explora y administra tus mangas favoritos con estilo.</p>
         </header>
 
         <div className='mb-8'>
@@ -171,45 +170,47 @@ export default function MangaApp () {
                 />
               )}
 
-              <MangaGrid
-                mangas={paginatedMangas}
-                isLoading={isLoading}
-                onEdit={handleEditManga}
-                onDelete={handleDeleteManga}
-              />
+              {!showAddForm && !editingManga && (
+                <>
+                  <MangaGrid
+                    mangas={paginatedMangas}
+                    isLoading={isLoading}
+                    onEdit={handleEditManga}
+                    onDelete={handleDeleteManga}
+                  />
 
-              {/* Pagination controls */}
-              {totalPages > 1 && (
-                <div className='flex justify-center items-center gap-2 mt-6'>
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className='px-3 py-1.5 text-sm rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-40 transition'
-                  >
-                    Anterior
-                  </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`px-3 py-1.5 text-sm rounded-md border ${currentPage === page
+                  {totalPages > 1 && (
+                    <div className='flex justify-center items-center gap-2 mt-6'>
+                      <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className='px-3 py-1.5 text-sm rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-40 transition'
+                      >
+                        Anterior
+                      </button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`px-3 py-1.5 text-sm rounded-md border ${currentPage === page
                         ? 'bg-blue-600 text-white border-blue-600'
                         : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'
                         } transition`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className='px-3 py-1.5 text-sm rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-40 transition'
-                  >
-                    Siguiente
-                  </button>
-                </div>
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className='px-3 py-1.5 text-sm rounded-md border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-40 transition'
+                      >
+                        Siguiente
+                      </button>
+                    </div>
+                  )}
+                </>
               )}
-
             </div>
           )}
 
@@ -225,7 +226,7 @@ export default function MangaApp () {
               <div className='bg-white rounded-lg shadow-soft p-6 border border-gray-200'>
                 <h3 className='text-lg font-semibold text-gray-900 mb-4'>Distribución por Estado</h3>
                 <div className='space-y-3'>
-                  {['Leyendo', 'Completado', 'En pausa', 'Abandonado', 'Plan de lectura'].map((estado) => {
+                  {['Leído', 'Completado', 'Leyendo', 'En pausa', 'Abandonado'].map((estado) => {
                     const count = mangas.filter((manga) => manga.estado === estado).length
                     const percentage = mangas.length > 0 ? (count / mangas.length) * 100 : 0
 
