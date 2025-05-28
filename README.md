@@ -132,7 +132,7 @@ Las animaciones personalizadas están en `src/index.css`:
 
 La aplicación es completamente responsive:
 - 📱 **Mobile**: 1 columna
-- 📱 **Tablet**: 2-3 columnas  
+- 📱 **Tablet**: 2-3 columnas
 - 🖥️ **Desktop**: 4+ columnas
 
 ## 🤝 Contribuir
